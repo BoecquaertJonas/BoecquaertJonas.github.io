@@ -1,0 +1,20 @@
+body,
+html {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: 'Arimo', sans-serif;
+  color: white;
+}
+
+main {
+    z-index: 2;
+    position: relative;
+    height: 100%;
+    background-color: #355C7D;
+    -webkit-transition: transform .7s ease-in-out;
+    -moz-transition: transform .7s ease-in-out;
+    -ms-transition: transform .7s ease-in-out;
+    -o-transition: transform .7s ease-in-out;
+    transition: transform .7s ease-in-out;
+  }

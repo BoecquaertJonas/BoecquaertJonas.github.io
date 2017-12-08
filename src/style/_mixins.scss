@@ -1,0 +1,6 @@
+@mixin wrap($margin-top, $margin-bottom) {
+	max-width: $container-width;
+	margin: $margin-top auto $margin-bottom;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
