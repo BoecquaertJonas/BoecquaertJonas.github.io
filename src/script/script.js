@@ -2,6 +2,8 @@
 
 var array = [];
 var result_data;
+var base_url;
+var compared_data;
 
 function processAllCrypto(){
     var allCrypto = document.querySelector("#currency");
@@ -17,6 +19,7 @@ function processAllCrypto(){
                 var result = JSON.parse(this.responseText);
                 var resultHolder = document.querySelector(".result");
                 result_data = result.Data;
+                base_url = result.BaseImageUrl;
                 SetSideBar(result.Data);
             }
         };
@@ -24,7 +27,6 @@ function processAllCrypto(){
         xhttp.send();
 
         allCrypto.addEventListener("input", function(e){
-            console.info(e.target.value);
             CheckNameInArray(e.target.value);
             // When user is typing.
         });
@@ -37,13 +39,37 @@ document.addEventListener("DOMContentLoaded", function(){
         for (var key in result_data){
             if (result_data[key].FullName == e.target.innerHTML){
                 console.log(result_data[key].FullName + " = " + e.target.innerHTML);
-                document.querySelector(".result-title").innerHTML = result_data[key].Id;
+                document.querySelector(".result-title").innerHTML = result_data[key].FullName;
+
+                var url_end = result_data[key].ImageUrl;
+                var url = base_url + url_end;
+                console.log(url);
+                document.querySelector(".result-image").src = url;
+                document.querySelector(".result-compare").innerHTML = "1 \"" + result_data[key].CoinName + "\" : ";
+                
+                CompareCurrency(result_data[key].Name);
             }
         }
         console.log(e.target.innerHTML);
-        e.target.style.color = "#F00";
     })
 });
+
+function CompareCurrency(Coin_Comp){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){
+            compared_data = JSON.parse(this.responseText);
+            
+            for (var key in compared_data){
+                document.querySelector(".result-compared").innerHTML = "$ " + compared_data[key].USD + " USD";
+            }
+        }
+    };
+    var url_api = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=" + Coin_Comp + "&tsyms=USD,EUR";
+    console.log(url_api);
+    xhttp.open("GET", url_api);
+    xhttp.send();
+}
 
 $(document).ready(function() {
     function toggleSidebar() {
@@ -52,6 +78,7 @@ $(document).ready(function() {
         $(".sidebar").toggleClass("opened");
 
         $(".sidebar-item").toggleClass("active");
+        $(".sidebar-search").toggleClass("active");
     }
     $(".button").on("click tap", function() {
         toggleSidebar();
@@ -68,10 +95,11 @@ function buildArrayFromResult(result){
         array.push(result[key].FullName);
     }
 }
+
 function buildPopularArray(result){
     var popular_array = [];
     for (var key in result){
-        if (result[key].SortOrder <= 10){
+        if (result[key].SortOrder <= 130){
             popular_array.push(result[key].FullName);
         }
     }
@@ -80,7 +108,7 @@ function buildPopularArray(result){
 }
 
 function CheckNameInArray(input){
-    var filter, ul, li, a, i;
+    var filter, ul, li, a, i, b, filter_array = [];
     filter = input.toUpperCase();
     console.log(filter);
     ul = document.querySelector(".sidebar-list");
@@ -89,6 +117,7 @@ function CheckNameInArray(input){
     // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];
+        console.log(a.innerHTML.toUpperCase());
         if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
         } else {
@@ -96,13 +125,11 @@ function CheckNameInArray(input){
         }
     }
 }
-function SetSideBar(result){
-    buildArrayFromResult(result);
-    var popular_array = buildPopularArray(result);
-    
-    for (var i = 0; i < popular_array.length; i++) {
+
+function MakeListItems(_array){
+    for (var i = 0; i < _array.length; i++) {
         
-            var element = popular_array[i];
+            var element = _array[i];
             
             var list_item = document.createElement("li");
             list_item.classList.add("sidebar-item");
@@ -117,3 +144,25 @@ function SetSideBar(result){
             list.appendChild(list_item);
         }
 }
+
+function SetSideBar(result){
+    buildArrayFromResult(result);
+    var popular_array = buildPopularArray(result);
+    MakeListItems(popular_array);
+}
+
+var switch_element = document.querySelector(".slider");
+switch_element.addEventListener("click", function() {
+
+    if (switch_element.classList.contains("class_clicked")) {
+        switch_element.classList.remove("class_clicked");
+        for (var key in compared_data){
+            document.querySelector(".result-compared").innerHTML = "$ " + compared_data[key].USD + " USD";
+        }
+    } else {
+        switch_element.classList.add("class_clicked");
+        for (var key in compared_data){
+            document.querySelector(".result-compared").innerHTML = "€ " + compared_data[key].EUR;
+        }
+    }
+});
