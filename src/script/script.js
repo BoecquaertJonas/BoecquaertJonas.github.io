@@ -178,17 +178,10 @@ switch_element.addEventListener("click", function() {
 });
 
 var refresh = document.querySelector(".fa.fa-refresh");
-refresh.addEventListener("mouseover", function(){
-    refresh.classList.add("fa-spin");
-});
-refresh.addEventListener("mouseout", function(){
-    setTimeout(function(){
-        refresh.classList.remove("fa-spin");
-    }, 500);
-});
 refresh.addEventListener("click", function(){
+    refresh.classList.add("fa-spin");
     CompareCurrency();
     setTimeout(function(){
         refresh.classList.remove("fa-spin");
-    }, 500);
+    }, 2000);
 });
