@@ -65,9 +65,15 @@ function CompareCurrency(){
             compared_data = JSON.parse(this.responseText);
             var coin_container = document.querySelector(".coin-container");
             coin_container.classList.add("active");
+            var switch_element = document.querySelector(".slider");
             for (var key in compared_data){
-                document.querySelector(".result-compared").innerHTML = "$ " + compared_data[key].USD + " USD";
-                console.log("$ " + compared_data[key].USD + " USD");
+                if (switch_element.classList.contains("class_clicked")) {
+                    document.querySelector(".result-compared").innerHTML = "€ " + compared_data[key].EUR;
+                    console.log("€ " + compared_data[key].EUR);
+                }else{
+                    document.querySelector(".result-compared").innerHTML = "$ " + compared_data[key].USD + " USD";
+                    console.log("$ " + compared_data[key].USD + " USD");
+                }
             }
         }
     };
