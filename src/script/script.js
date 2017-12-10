@@ -35,7 +35,7 @@ function processAllCrypto(){
 }
 
 document.addEventListener("DOMContentLoaded", function(){
-    processAllCrypto();
+    
     document.querySelector(".sidebar-list").addEventListener("click", function(e){
         var choose_curr = document.querySelector(".choose-curr");
         choose_curr.classList.add("hide");
@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 document.querySelector(".result-compare").innerHTML = "1 \"" + result_data[key].CoinName + "\" : ";
                 compare_coin = result_data[key].Name;
                 CompareCurrency();
+                toggleSidebar();
             }
         }
         console.log(e.target.innerHTML);
@@ -75,18 +76,19 @@ function CompareCurrency(){
     xhttp.send();
 }
 
-$(document).ready(function() {
-    function toggleSidebar() {
-        $(".button").toggleClass("active");
-        $(".button").toggleClass("move-to-left");
-        $(".sidebar").toggleClass("opened");
+function toggleSidebar() {
+    $(".button").toggleClass("active");
+    $(".button").toggleClass("move-to-left");
+    $(".sidebar").toggleClass("opened");
+    $(".sidebar-item").toggleClass("active");
+    $(".sidebar-search").toggleClass("active");
+}
 
-        $(".sidebar-item").toggleClass("active");
-        $(".sidebar-search").toggleClass("active");
-    }
+$(document).ready(function() {
     $(".button").on("click tap", function() {
         toggleSidebar();
     });
+    processAllCrypto();
     $(document).keyup(function(e) {
         if (e.keyCode === 27) {
             toggleSidebar();
@@ -132,21 +134,19 @@ function CheckNameInArray(input){
 
 function MakeListItems(_array){
     for (var i = 0; i < _array.length; i++) {
+        var element = _array[i];
+        var list_item = document.createElement("li");
+        list_item.classList.add("sidebar-item");
         
-            var element = _array[i];
-            
-            var list_item = document.createElement("li");
-            list_item.classList.add("sidebar-item");
+        var list_item_content = document.createElement("a");
+        list_item_content.classList.add("sidebar-anchor");
+        list_item_content.innerHTML = element;
+        list_item.appendChild(list_item_content);
         
-            var list_item_content = document.createElement("a");
-            list_item_content.classList.add("sidebar-anchor");
-            list_item_content.innerHTML = element;
-        
-            list_item.appendChild(list_item_content);
-        
-            var list = document.querySelector("ul.sidebar-list");
-            list.appendChild(list_item);
-        }
+        var list = document.querySelector("ul.sidebar-list");
+        list.appendChild(list_item);
+    }
+    toggleSidebar();
 }
 
 function SetSideBar(result){
