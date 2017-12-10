@@ -3,14 +3,45 @@
     margin: 40px auto;
     display: block;
     background-color: white;
+    opacity: 0;
   }
 
+  .coin-container.active{
+    opacity: 1;
+  }
+
+.choose-curr{
+  text-align: right;
+  margin-right: 350px;
+}
+
+.choose-curr.hide{
+  display: none;
+}
+
+.result-image-div{
+  width: 100%;
+}
+
   .result-image{
-      margin: 20px auto;
+      margin: 30px auto;
       display: block;
       max-height: 300px;
       max-width: 300px;
   }
+
+.fa.fa-refresh{
+  position: relative;
+  margin: 30px;
+  color: #355C7D;
+  cursor: pointer;
+}
+
+.fa.fa-hand-o-right{
+  color: white;
+  margin: 30px;
+}
+
 
   .result-compare, .result-compared{
       margin-left: 20px;

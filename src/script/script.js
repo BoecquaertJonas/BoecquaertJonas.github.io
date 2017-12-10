@@ -4,6 +4,7 @@ var array = [];
 var result_data;
 var base_url;
 var compared_data;
+var compare_coin;
 
 function processAllCrypto(){
     var allCrypto = document.querySelector("#currency");
@@ -36,6 +37,8 @@ function processAllCrypto(){
 document.addEventListener("DOMContentLoaded", function(){
     processAllCrypto();
     document.querySelector(".sidebar-list").addEventListener("click", function(e){
+        var choose_curr = document.querySelector(".choose-curr");
+        choose_curr.classList.add("hide");
         for (var key in result_data){
             if (result_data[key].FullName == e.target.innerHTML){
                 console.log(result_data[key].FullName + " = " + e.target.innerHTML);
@@ -46,27 +49,28 @@ document.addEventListener("DOMContentLoaded", function(){
                 console.log(url);
                 document.querySelector(".result-image").src = url;
                 document.querySelector(".result-compare").innerHTML = "1 \"" + result_data[key].CoinName + "\" : ";
-                
-                CompareCurrency(result_data[key].Name);
+                compare_coin = result_data[key].Name;
+                CompareCurrency();
             }
         }
         console.log(e.target.innerHTML);
     })
 });
 
-function CompareCurrency(Coin_Comp){
+function CompareCurrency(){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){
             compared_data = JSON.parse(this.responseText);
-            
+            var coin_container = document.querySelector(".coin-container");
+            coin_container.classList.add("active");
             for (var key in compared_data){
                 document.querySelector(".result-compared").innerHTML = "$ " + compared_data[key].USD + " USD";
+                console.log("$ " + compared_data[key].USD + " USD");
             }
         }
     };
-    var url_api = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=" + Coin_Comp + "&tsyms=USD,EUR";
-    console.log(url_api);
+    var url_api = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=" + compare_coin + "&tsyms=USD,EUR";
     xhttp.open("GET", url_api);
     xhttp.send();
 }
@@ -165,4 +169,20 @@ switch_element.addEventListener("click", function() {
             document.querySelector(".result-compared").innerHTML = "€ " + compared_data[key].EUR;
         }
     }
+});
+
+var refresh = document.querySelector(".fa.fa-refresh");
+refresh.addEventListener("mouseover", function(){
+    refresh.classList.add("fa-spin");
+});
+refresh.addEventListener("mouseout", function(){
+    setTimeout(function(){
+        refresh.classList.remove("fa-spin");
+    }, 500);
+});
+refresh.addEventListener("click", function(){
+    CompareCurrency();
+    setTimeout(function(){
+        refresh.classList.remove("fa-spin");
+    }, 500);
 });
